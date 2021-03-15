@@ -20,4 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });*/
 
 Route::post('/login',[UserController::class, 'login']);
-Route::middleware('auth:sanctum')->get('/user', [UserController::class, 'index']);
+Route::middleware(['auth:sanctum'])->group(function(){
+    if (auth()->user()) {
+        auth()->user()->assignRole('admin');
+    }
+
+    return Route::get('/user', [UserController::class, 'index']);
+});
